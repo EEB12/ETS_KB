@@ -46,8 +46,8 @@ def readMap(fileMap):
 
 
 class Block:
-
-    def __init__(self, x, y, rot, parent, board, x1=None,y1=None):
+    
+    def __init__(self, x, y, rot, parent, board, x1=None,y1=None, gn=0):
         self.x      = x
         self.y      = y
         self.rot    = rot  
@@ -55,6 +55,7 @@ class Block:
         self.board  = copy.deepcopy(board)
         self.x1     = x1
         self.y1     = y1
+        self.gn     = gn
     
     def __lt__(self, block):
         return True
@@ -62,7 +63,7 @@ class Block:
         return True
 
     def move_up(self):
-        newBlock = Block(self.x, self.y, self.rot, self, self.board)
+        newBlock = Block(self.x, self.y, self.rot, self, self.board,self.gn)
 
         if self.rot == "STANDING":
             newBlock.y -= 2 
@@ -78,7 +79,7 @@ class Block:
         return newBlock 
 
     def move_down(self):
-        newBlock = Block(self.x, self.y, self.rot, self, self.board)
+        newBlock = Block(self.x, self.y, self.rot, self, self.board,self.gn)
 
         if newBlock.rot == "STANDING":
             newBlock.y += 1
@@ -93,7 +94,7 @@ class Block:
         return newBlock 
 
     def move_right(self):
-        newBlock = Block(self.x, self.y, self.rot, self, self.board)
+        newBlock = Block(self.x, self.y, self.rot, self, self.board,self.gn)
     
         if newBlock.rot == "STANDING":
             newBlock.x += 1
@@ -108,7 +109,7 @@ class Block:
         return newBlock
 
     def move_left(self):
-        newBlock = Block(self.x, self.y, self.rot, self, self.board)
+        newBlock = Block(self.x, self.y, self.rot, self, self.board,self.gn)
 
         if newBlock.rot == "STANDING":
             newBlock.rot = "LAYING_X"
@@ -125,44 +126,44 @@ class Block:
 
     # FOR CASE SPLIT
     def split_move_up(self):
-        newBlock = Block(self.x, self.y, self.rot, self, self.board, self.x1, self.y1)
+        newBlock = Block(self.x, self.y, self.rot, self, self.board, self.x1, self.y1,self.gn)
         newBlock.y -= 1
         return newBlock 
 
     def split_move_down(self):
-        newBlock = Block(self.x, self.y, self.rot, self, self.board, self.x1, self.y1)
+        newBlock = Block(self.x, self.y, self.rot, self, self.board, self.x1, self.y1,self.gn)
         newBlock.y += 1
         return newBlock 
 
 
     def split_move_left(self):
-        newBlock = Block(self.x, self.y, self.rot, self, self.board, self.x1, self.y1)
+        newBlock = Block(self.x, self.y, self.rot, self, self.board, self.x1, self.y1,self.gn)
         newBlock.x -= 1
         return newBlock 
 
 
     def split_move_right(self):
-        newBlock = Block(self.x, self.y, self.rot, self, self.board, self.x1, self.y1)
+        newBlock = Block(self.x, self.y, self.rot, self, self.board, self.x1, self.y1,self.gn)
         newBlock.x += 1
         return newBlock 
 
     def split1_move_up(self):
-        newBlock = Block(self.x, self.y, self.rot, self, self.board, self.x1, self.y1)
+        newBlock = Block(self.x, self.y, self.rot, self, self.board, self.x1, self.y1,self.gn)
         newBlock.y1 -= 1
         return newBlock 
 
     def split1_move_down(self):
-        newBlock = Block(self.x, self.y, self.rot, self, self.board, self.x1, self.y1)
+        newBlock = Block(self.x, self.y, self.rot, self, self.board, self.x1, self.y1,self.gn)
         newBlock.y1 += 1
         return newBlock 
 
     def split1_move_left(self):
-        newBlock = Block(self.x, self.y, self.rot, self, self.board, self.x1, self.y1)
+        newBlock = Block(self.x, self.y, self.rot, self, self.board, self.x1, self.y1, self.gn)
         newBlock.x1 -= 1
         return newBlock 
 
     def split1_move_right(self):
-        newBlock = Block(self.x, self.y, self.rot, self, self.board, self.x1, self.y1)
+        newBlock = Block(self.x, self.y, self.rot, self, self.board, self.x1, self.y1,self.gn)
         newBlock.x1 += 1
         return newBlock 
 
@@ -216,7 +217,7 @@ class Block:
                 print("")
             
     
-# Case 3: Chữ X
+# Case 3
 def isNumberThree(block,x,y):
     board = block.board
 
@@ -395,17 +396,18 @@ def isValidBlock(block):
         y1    = block.y1
         rot   = block.rot
         board = block.board
+        gn    = block.gn
         
         
-        # Case 2: Đo đỏ
+        # Case 2
         if rot == "STANDING" and board[y][x] == 2:
             return False 
 
-        # Case 3: Chữ X
+        # Case 3
         if rot == "STANDING" and board[y][x] == 3:
             isNumberThree(block,x,y)
         
-        # Case 4: Cục tròn đặc (only đóng).
+        # Case 4
         if board[y][x] == 4:
             isNumberFour(block,x,y)
         if rot == "LAYING_X" and board[y][x+1] == 4:
@@ -416,7 +418,7 @@ def isValidBlock(block):
             isNumberFour(block,x1,y1)
 
 
-        # Case 5: Cục tròn đặc (toggle)
+        # Case 5
         if board[y][x] == 5:
             isNumberFive(block,x,y)
         if rot == "LAYING_X" and board[y][x+1] == 5:
@@ -426,7 +428,7 @@ def isValidBlock(block):
         if rot == "SPLIT" and board[y1][x1] == 5:
             isNumberFive(block,x1,y1)
 
-        # Case 6: Cục tròn đặc (only mở)
+        # Case 6
         if board[y][x] == 6:
             isNumberSix(block,x,y)
         if rot == "LAYING_X" and board[y][x+1] == 6:
@@ -436,7 +438,7 @@ def isValidBlock(block):
         if rot == "SPLIT" and board[y1][x1] == 6:
             isNumberSix(block,x1,y1)
 
-        # Case 7: Phân thân 
+        # Case 7
         if rot == "STANDING" and board[y][x] == 7:
             isNumberSeven(block,x,y)
         # Case7_1: MERGE BLOCK
@@ -459,7 +461,7 @@ def isValidBlock(block):
                 block.rot = "LAYING_Y"
                 block.y   = y1
 
-        # Case 8: Chữ X (only mở)
+        # Case 8: 
         if rot == "STANDING" and board[y][x] == 8:
             isNumberEight(block,x,y)
             
@@ -529,18 +531,7 @@ def isVisited(block):
 
     return False
 
-def move(Stack, block, flag):
-
-    if isValidBlock(block):
-        if isVisited(block):
-            return None
-
-        Stack.append(block)
-        passState.append(block)
-        #print(flag)
-        return True 
-
-    return False   
+  
 
 def printSuccessRoad(block):
     
@@ -573,89 +564,7 @@ def printSuccessRoad(block):
 
     print("COMSUME",step,"STEP!!!!")
     
-# solve DFS
-# def DFS(block):
 
-#     board = block.board
-#     Stack = []
-#     Stack.append(block)
-#     passState.append(block)
-    
-#     virtualStep = 0
-
-#     while Stack:
-#         current = Stack.pop()
-#         #current.disPlayPosition()
-#         #current.disPlayBoard()
-
-#         if isGoal(current):
-#             printSuccessRoad(current)
-#             print("COMSUME", virtualStep, "VIRTUAL STEP")
-#             print("SUCCESS")
-#             return True
-#         else:
-#             if current.rot != "SPLIT":
-#                 virtualStep += 4
-
-#                 move(Stack,current.move_up(), "up")
-#                 move(Stack,current.move_right(), "right")
-#                 move(Stack,current.move_down(), "down")
-#                 move(Stack,current.move_left(), "left")
-#             else: 
-#                 virtualStep += 8
-
-#                 move(Stack,current.split_move_left(), "left0")
-#                 move(Stack,current.split_move_right(), "right0")
-#                 move(Stack,current.split_move_up(), "up0")
-#                 move(Stack,current.split_move_down(), "down0")
-                
-#                 move(Stack,current.split1_move_left(), "left1")
-#                 move(Stack,current.split1_move_right(), "right1")
-#                 move(Stack,current.split1_move_up(), "up1")
-#                 move(Stack,current.split1_move_down(), "down1")
-#     return False
-
-# solve BFS
-def BFS(block):
-
-    board = block.board
-    Queue = []
-    Queue.append(block)
-    passState.append(block)
-
-    virtualStep = 0
-
-    while Queue:
-        current = Queue.pop(0)
-        #current.disPlayPosition()
-        #current.disPlayBoard()
-
-        if isGoal(current):
-            printSuccessRoad(current)
-            print("SUCCESS")
-            print("COMSUME", virtualStep, "VIRTUAL STEP")
-            return True
-
-        if current.rot != "SPLIT":
-            virtualStep += 4
-
-            move(Queue,current.move_up(), "up")
-            move(Queue,current.move_right(), "right")
-            move(Queue,current.move_down(), "down")
-            move(Queue,current.move_left(), "left")
-        else: 
-            virtualStep += 8
-
-            move(Queue,current.split_move_left(), "left0")
-            move(Queue,current.split_move_right(), "right0")
-            move(Queue,current.split_move_up(), "up0")
-            move(Queue,current.split_move_down(), "down0")
-            
-            move(Queue,current.split1_move_left(), "left1")
-            move(Queue,current.split1_move_right(), "right1")
-            move(Queue,current.split1_move_up(), "up1")
-            move(Queue,current.split1_move_down(), "down1")
-    return False
 
 
 def evalFunction(block):
@@ -680,103 +589,98 @@ def evalFunction(block):
 
     if rot == "SPLIT":
 
-        distance1 = (x-xGoal)*(x-xGoal)+(y-yGoal)*(y-yGoal)
-        distance2 = (x1-xGoal)*(x1-xGoal)+(y1-yGoal)*(y1-yGoal)
+        distance1 = max(abs(x-xGoal),abs(y-yGoal))
+        distance2 = max(abs(x1-xGoal),abs(y1-yGoal))
         distance = (distance1+distance2)/2
 
     else:
         # (x1 - x2)^2 + (y1 - y2) ^ 2
-        distance = (x-xGoal)*(x-xGoal)+(y-yGoal)*(y-yGoal)
+        
+        distance = max(abs(x-xGoal),abs(y-yGoal))
 
     return int(distance)
 
-# def moveBest(BestQueue, block, flag):
+def moveBest(BestQueue, block, flag):
     
-#     if isValidBlock(block):
-#         if isVisited(block):            
-#             return False
+    if isValidBlock(block):
+        if isVisited(block):            
+            return False
         
-#         EvalCur = evalFunction(block)
-#         BestQueue.put((EvalCur, block))
-#         passState.append(block)
+        EvalCur = evalFunction(block)
+        block.gn += 1
+        BestQueue.put((EvalCur, block))
+        passState.append(block)
 
-#         return True
-#     return False
+        return True
+    return False
             
 
-# def BEST(block):
+def BEST(block):
     
-#     # create priority queue
-#     BestQueue = Q.PriorityQueue()
+    # create priority queue
+    BestQueue = Q.PriorityQueue()
 
-#     startEval = evalFunction(block)
-
-#     # insert start node
-#     BestQueue.put((startEval, block))
-#     passState.append(block)
+    startEval = evalFunction(block)
+    block.gn+=1
+    # insert start node
+    BestQueue.put((startEval, block))
+    passState.append(block)
     
-#     virtualStep = 0
+    virtualStep = 0
 
-#     # until priority queue is empty
-#     while BestQueue.not_empty:
+    # until priority queue is empty
+    while BestQueue.not_empty:
 
-#         item   = BestQueue.get()  # item = (block, distance)
-#         iDista = item[0]
-#         iBlock = item[1]
+        item   = BestQueue.get()  # item = (distance, block)
+        iDista = item[0]
+        iBlock = item[1]
 
-#         # if goal
-#         if isGoal(iBlock):
+        # if goal
+        if isGoal(iBlock):
 
-#             printSuccessRoad(iBlock)
-#             print("SUCCESS")
-#             print("COMSUME", virtualStep, "VIRTUAL STEP")
+            printSuccessRoad(iBlock)
+            print("SUCCESS")
+            print("COMSUME", virtualStep, "VIRTUAL STEP")
 
-#             return True
+            return True
 
-#         # put all new operator to queue
-#         if iBlock.rot != "SPLIT":
+        # put all new operator to queue
+        if iBlock.rot != "SPLIT":
             
-#             virtualStep += 4
+            virtualStep += 4
 
-#             # try up
-#             moveBest(BestQueue, iBlock.move_up(), "up") 
-#             moveBest(BestQueue, iBlock.move_down(), "down") 
-#             moveBest(BestQueue, iBlock.move_right(), "right") 
-#             moveBest(BestQueue, iBlock.move_left(), "left") 
-#         else: 
+            # try up
+            moveBest(BestQueue, iBlock.move_up(), "up") 
+            moveBest(BestQueue, iBlock.move_down(), "down") 
+            moveBest(BestQueue, iBlock.move_right(), "right") 
+            moveBest(BestQueue, iBlock.move_left(), "left") 
+        else: 
            
-#             virtualStep += 8
+            virtualStep += 8
 
-#             moveBest(BestQueue, iBlock.split_move_left(), "left0")
-#             moveBest(BestQueue, iBlock.split_move_right(), "right0")
-#             moveBest(BestQueue, iBlock.split_move_up(), "up0")
-#             moveBest(BestQueue, iBlock.split_move_down(), "down0")
+            moveBest(BestQueue, iBlock.split_move_left(), "left0")
+            moveBest(BestQueue, iBlock.split_move_right(), "right0")
+            moveBest(BestQueue, iBlock.split_move_up(), "up0")
+            moveBest(BestQueue, iBlock.split_move_down(), "down0")
             
-#             moveBest(BestQueue, iBlock.split1_move_left(), "left1")
-#             moveBest(BestQueue, iBlock.split1_move_right(), "right1")
-#             moveBest(BestQueue, iBlock.split1_move_up(), "up1")
-#             moveBest(BestQueue, iBlock.split1_move_down(), "down1")
+            moveBest(BestQueue, iBlock.split1_move_left(), "left1")
+            moveBest(BestQueue, iBlock.split1_move_right(), "right1")
+            moveBest(BestQueue, iBlock.split1_move_up(), "up1")
+            moveBest(BestQueue, iBlock.split1_move_down(), "down1")
 
 
 
 
 # START PROGRAM HERE
-passState = []
+passState = [] 
 
 MAP_ROW, MAP_COL, xStart, yStart, sourceMap, ManaBoa \
                         = readMap('map/map'+sys.argv[1:][0]+'.txt')
 
 block = Block(xStart, yStart, "STANDING", None, sourceMap)
 
-if sys.argv[1:][1] == "DFS":
-    print("Solve DFS")  
-    DFS(block)
 
-elif sys.argv[1:][1] == "BFS":
-    print("Solve BFS")
-    BFS(block)
-
-elif sys.argv[1:][1] == "BEST":
+if sys.argv[1:][1] == "BEST":
     print("Solve Best")
     BEST(block)
 
