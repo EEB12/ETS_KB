@@ -1,19 +1,3 @@
-# -*- coding: utf-8 -*- 
-# AI Assignment 1 - Server playing game Bloxorz
-# Author: Thanh Hung & Luan Pham & Hoang Gas
-
-# Some clarify
-# 0: None
-# 1: Normal
-# 2: Đo đỏ
-# 3: Chữ X  (T C O)
-# 4: Cục tròn đặc (only đóng).
-# 5: Cục tròn đặc (T C O)
-# 6: Cục tròn đặc (only mở)
-# 7: Cục phân thân
-# 8: Chữ X  (only mở)
-# 9: Lỗ chiến thắng
-
 import copy
 import sys
 import queue as Q
@@ -272,7 +256,7 @@ def isNumberThree(block,x,y):
 
 
 
-# Case 4: Cục tròn đặc (only đóng).
+# Case 4
 def isNumberFour(block,x,y):
     board = block.board
     
@@ -286,7 +270,7 @@ def isNumberFour(block,x,y):
                 bY = item[2*i+4]
                 board[bX][bY] = 0
 
-# Case 5: Cục tròn đặc (toggle)
+# Case 5: 
 def isNumberFive(block,x,y):
     board = block.board
 
@@ -338,7 +322,7 @@ def isNumberFive(block,x,y):
                     board[bX][bY]=1
 
 
-# Case 6: Cục tròn đặc (only mở)
+# Case 6: 
 def isNumberSix(block,x,y):
     board = block.board
 
@@ -350,7 +334,7 @@ def isNumberSix(block,x,y):
                 bY = item[2*i+4]
                 board[bX][bY] = 1
 
-# Case 7: Cục phân thân
+# Case 7: 
 def isNumberSeven(block,x,y):  
     board = block.board
     array = []    
@@ -368,7 +352,7 @@ def isNumberSeven(block,x,y):
 
     block.rot = "SPLIT"
 
-# Case 8: Chữ X (only mở)
+# Case 8: 
 def isNumberEight(block,x,y):
     board = block.board
 
@@ -461,7 +445,7 @@ def isValidBlock(block):
                 block.rot = "LAYING_Y"
                 block.y   = y1
 
-        # Case 8: 
+        # Case 8
         if rot == "STANDING" and board[y][x] == 8:
             isNumberEight(block,x,y)
             
