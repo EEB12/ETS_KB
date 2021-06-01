@@ -26,7 +26,7 @@ def key(event):
 
 root = tk.Tk()
 print( "Press a key (Escape key to exit):" )
-root.bind_all('<Key>', key)
+root.bind_all('<KeyPress>', key)
 # don't show the tk window
 root.withdraw()
 root.mainloop()

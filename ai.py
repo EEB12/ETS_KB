@@ -631,6 +631,8 @@ def BEST(block):
             lastPath.disPlayPosition()
             lastPath.disPlayBoard()
 
+            handler(iblock)
+
             return True
 
         # put all new operator to queue
@@ -657,12 +659,12 @@ def BEST(block):
             moveBest(BestQueue, iBlock.split1_move_up(), "up1")
             moveBest(BestQueue, iBlock.split1_move_down(), "down1")
 
-def key(event):
+def key(event, arg):
     """shows key or tk code for the key"""
     if event.keysym == 'Escape':
         root.destroy()
     if event.char == event.keysym:
-        # normal number and letter characters
+        # normal number and lettper characters
         print( 'Normal Key %r' % event.char )
     elif len(event.char) == 1:
         # charcters like []/.,><#$ also Return and ctrl/key
@@ -675,7 +677,20 @@ def key(event):
     # print("=============================")
     # item.disPlayBoard()
 
+def handler(block):
+    root = tk.Tk()
+    print( "Press a key (Escape key to exit):" )
+    root.bind_all('<Key>', lambda event, arg=block: key(event,arg) )
+    # don't show the tk window
+    root.withdraw() 
+    root.mainloop()
 
+    # if sys.argv[1:][1] == "BEST":
+    #     print("Solve Best")
+    #     BEST(block)
+
+    # else:
+    #     print("Wrong algorithms argument!")
 
 # START PROGRAM HERE
 passState = [] 
