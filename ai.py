@@ -1,7 +1,7 @@
 import copy
 import sys
 import queue as Q
-
+import time
 def readMap(fileMap):
     with open(fileMap) as f:
         MAP_ROW, MAP_COL, xStart, yStart = [int(x) for x in next(f).split()] # read first line
@@ -541,6 +541,7 @@ def printSuccessRoad(block):
     step = 0
     for item in successRoad:
         step += 1
+        time.sleep(10)
         print("\nStep:", step, end=' >>>   ')
         item.disPlayPosition()
         print("=============================")
