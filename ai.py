@@ -25,7 +25,7 @@ def readMap(fileMap):
     print("ManaBoa:")
     for item in manaBoa:
         print(item)
-    print("======================================")
+    print("readMap======================================")
     return MAP_ROW, MAP_COL, xStart, yStart, sourceMap, manaBoa
 
 
