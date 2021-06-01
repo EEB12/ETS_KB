@@ -14,7 +14,7 @@ def key(event):
     if event.keysym == 'Escape':
         root.destroy()
     if event.char == event.keysym:
-        # normal number and letter characters
+        # normal number and letter characterxads
         print( 'Normal Key %r' % event.char )
     elif len(event.char) == 1:
         # charcters like []/.,><#$ also Return and ctrl/key

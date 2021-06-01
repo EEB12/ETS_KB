@@ -2,6 +2,7 @@ import copy
 import sys
 import queue as Q
 import time
+import tkinter as tk
 
 def readMap(fileMap):
     with open(fileMap) as f:
