@@ -543,7 +543,7 @@ def printSuccessRoad(block):
     step = 0
     for item in successRoad:
         step += 1
-        time.sleep(1)
+        # time.sleep(0.2)
         # print("\nStep:", step, end=' >>>   ')
         item.disPlayPosition()
         # print("=============================")
@@ -573,6 +573,7 @@ def evalFunction(block):
     # calc distance pos-goal
     distance = 0
 
+    # Heuristic Function with chebyshev
     if rot == "SPLIT":
 
         distance1 = max(abs(x-xGoal),abs(y-yGoal))
@@ -581,7 +582,6 @@ def evalFunction(block):
 
     else:
         # (x1 - x2)^2 + (y1 - y2) ^ 2
-        
         distance = max(abs(x-xGoal),abs(y-yGoal))
 
     return int(distance)
@@ -631,6 +631,8 @@ def BEST(block):
             lastPath.disPlayPosition()
             lastPath.disPlayBoard()
 
+            handler(iBlock)
+
             return True
 
         # put all new operator to queue
@@ -657,12 +659,16 @@ def BEST(block):
             moveBest(BestQueue, iBlock.split1_move_up(), "up1")
             moveBest(BestQueue, iBlock.split1_move_down(), "down1")
 
-def key(event):
+def key(event, arg):
     """shows key or tk code for the key"""
     if event.keysym == 'Escape':
         root.destroy()
+    if event.keysym == 'Left':
+        arg = arg.move_left()
+    if event.keysym == 'Up':
+        arg = arg.move_up()
     if event.char == event.keysym:
-        # normal number and letter characters
+        # normal number and lettper characters
         print( 'Normal Key %r' % event.char )
     elif len(event.char) == 1:
         # charcters like []/.,><#$ also Return and ctrl/key
@@ -670,12 +676,25 @@ def key(event):
     else:
         # f1 to f12, shift keys, caps lock, Home, End, Delete ...
         print( 'Special Key %r' % event.keysym )
+    arg.disPlayBoard()
         
     # item.disPlayPosition()
     # print("=============================")
     # item.disPlayBoard()
 
+def handler(block):
+    print( "Press a key (Escape key to exit):" )
+    root.bind_all('<Key>', lambda event, arg=block: key(event,arg) )
+    # don't show the tk window
+    root.withdraw() 
+    root.mainloop()
 
+    # if sys.argv[1:][1] == "BEST":
+    #     print("Solve Best")
+    #     BEST(block)
+
+    # else:
+    #     print("Wrong algorithms argument!")
 
 # START PROGRAM HERE
 passState = [] 
@@ -691,6 +710,8 @@ block = Block(xStart, yStart, "STANDING", None, sourceMap)
 # # don't show the tk window
 # root.withdraw()
 # root.mainloop()
+
+root = tk.Tk()
 
 if sys.argv[1:][1] == "BEST":
     print("Solve Best")
