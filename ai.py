@@ -685,12 +685,12 @@ MAP_ROW, MAP_COL, xStart, yStart, sourceMap, ManaBoa \
 
 block = Block(xStart, yStart, "STANDING", None, sourceMap)
 
-root = tk.Tk()
-print( "Press a key (Escape key to exit):" )
-root.bind_all('<Key>', key)
-# don't show the tk window
-root.withdraw()
-root.mainloop()
+# root = tk.Tk()
+# print( "Press a key (Escape key to exit):" )
+# root.bind_all('<Key>', key)
+# # don't show the tk window
+# root.withdraw()
+# root.mainloop()
 
 if sys.argv[1:][1] == "BEST":
     print("Solve Best")
