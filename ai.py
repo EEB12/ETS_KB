@@ -659,14 +659,19 @@ def BEST(block):
             moveBest(BestQueue, iBlock.split1_move_up(), "up1")
             moveBest(BestQueue, iBlock.split1_move_down(), "down1")
 
-def key(event, arg):
+def key(event):
     """shows key or tk code for the key"""
+    # while(True):
     if event.keysym == 'Escape':
         root.destroy()
     if event.keysym == 'Left':
-        arg = arg.move_left()
+        block = block.move_left()
+    if event.keysym == 'Right':
+        block = block.move_right()
+    if event.keysym == 'Down':
+        block = block.move_down()
     if event.keysym == 'Up':
-        arg = arg.move_up()
+        block = block.move_up()
     if event.char == event.keysym:
         # normal number and lettper characters
         print( 'Normal Key %r' % event.char )
@@ -676,15 +681,25 @@ def key(event, arg):
     else:
         # f1 to f12, shift keys, caps lock, Home, End, Delete ...
         print( 'Special Key %r' % event.keysym )
-    arg.disPlayBoard()
+    block.disPlayBoard()
+    passHandler.append(block)
+    # print(passHandler[-1].disPlayBoard())
+        # time.sleep(2)
         
     # item.disPlayPosition()
     # print("=============================")
     # item.disPlayBoard()
 
-def handler(block):
+def handler(blocks):
+    block = blocks
     print( "Press a key (Escape key to exit):" )
-    root.bind_all('<Key>', lambda event, arg=block: key(event,arg) )
+    # passHandler.append(block)
+    i = 0
+    # while(True):
+    # print("while ke-",i)
+    # i += 1
+    # root.bind_all('<Key>', lambda event, arg=passHandler[-1]: key(event,arg) )
+    root.bind_all('<Key>', key)
     # don't show the tk window
     root.withdraw() 
     root.mainloop()
@@ -697,7 +712,8 @@ def handler(block):
     #     print("Wrong algorithms argument!")
 
 # START PROGRAM HERE
-passState = [] 
+passState = []
+passHandler = []
 
 MAP_ROW, MAP_COL, xStart, yStart, sourceMap, ManaBoa \
                         = readMap('map/map'+sys.argv[1:][0]+'.txt')
