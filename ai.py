@@ -2,6 +2,7 @@ import copy
 import sys
 import queue as Q
 import time
+import tkinter as tk
 
 def readMap(fileMap):
     with open(fileMap) as f:
@@ -543,16 +544,15 @@ def printSuccessRoad(block):
     for item in successRoad:
         step += 1
         time.sleep(1)
-        print("\nStep:", step, end=' >>>   ')
+        # print("\nStep:", step, end=' >>>   ')
         item.disPlayPosition()
-        print("=============================")
+        # print("=============================")
         item.disPlayBoard()
 
     print("COMSUME",step,"STEP!!!!")
     
-
-
-
+    return item
+    
 def evalFunction(block):
 
     #  local definition
@@ -624,9 +624,12 @@ def BEST(block):
         # if goal
         if isGoal(iBlock):
 
-            printSuccessRoad(iBlock)
+            lastPath = printSuccessRoad(iBlock)
             print("SUCCESS")
             print("COMSUME", virtualStep, "VIRTUAL STEP")
+            
+            lastPath.disPlayPosition()
+            lastPath.disPlayBoard()
 
             return True
 
@@ -654,6 +657,23 @@ def BEST(block):
             moveBest(BestQueue, iBlock.split1_move_up(), "up1")
             moveBest(BestQueue, iBlock.split1_move_down(), "down1")
 
+def key(event):
+    """shows key or tk code for the key"""
+    if event.keysym == 'Escape':
+        root.destroy()
+    if event.char == event.keysym:
+        # normal number and letter characters
+        print( 'Normal Key %r' % event.char )
+    elif len(event.char) == 1:
+        # charcters like []/.,><#$ also Return and ctrl/key
+        print( 'Punctuation Key %r (%r)' % (event.keysym, event.char) )
+    else:
+        # f1 to f12, shift keys, caps lock, Home, End, Delete ...
+        print( 'Special Key %r' % event.keysym )
+        
+    # item.disPlayPosition()
+    # print("=============================")
+    # item.disPlayBoard()
 
 
 
@@ -665,6 +685,12 @@ MAP_ROW, MAP_COL, xStart, yStart, sourceMap, ManaBoa \
 
 block = Block(xStart, yStart, "STANDING", None, sourceMap)
 
+root = tk.Tk()
+print( "Press a key (Escape key to exit):" )
+root.bind_all('<Key>', key)
+# don't show the tk window
+root.withdraw()
+root.mainloop()
 
 if sys.argv[1:][1] == "BEST":
     print("Solve Best")
