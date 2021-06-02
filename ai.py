@@ -673,9 +673,7 @@ def key(event, arg):
         arg = arg.move_down()
     if event.keysym == 'Up':
         arg = arg.move_up()
-    if isFloor(arg)!= True:
-        print("cundang")
-        root.destroy()
+    
     # if event.char == event.keysym:
         # normal number and lettper characters
         # print( 'Normal Key %r' % event.char )
@@ -688,6 +686,10 @@ def key(event, arg):
     
     passHandler.append(arg)
     passHandler[-1].disPlayBoard()
+    if isFloor(arg)!= True:
+        
+        print("\n----------------------- PECUNDANG -----------------------")
+        root.destroy()
 
 def handler(blocks):
     print( "Press a key (Escape key to exit):" )
