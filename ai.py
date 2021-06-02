@@ -592,7 +592,7 @@ def evalFunction(block):
 
     return int(distance)
 
-def moveBest(BestQueue, block, flag):
+def moveAStar(AStarQueue, block, flag):
     
     if isValidBlock(block):
         if isVisited(block):            
@@ -601,35 +601,35 @@ def moveBest(BestQueue, block, flag):
         EvalCur = evalFunction(block)
         block.gn += 1
         # print("block.gn + EvalCur:", block.gn + EvalCur, block.gn, EvalCur)
-        BestQueue.put((block.gn + EvalCur, block))
+        AStarQueue.put((block.gn + EvalCur, block))
         passState.append(block)
 
         return True
     return False
         
-def BEST(block):
+def AStar(block):
     
     # create priority queue
-    BestQueue = Q.PriorityQueue()
-    # print(sizepq(BestQueue))
+    AStarQueue = Q.PriorityQueue()
+    # print(sizepq(AStarQueue))
 
     startEval = evalFunction(block)
     # block.gn+=1
     # insert start node
-    BestQueue.put((startEval, block))
+    AStarQueue.put((startEval, block))
     passState.append(block)
     
     virtualStep = 0
 
-    bestq = 0
+    AStarq = 0
     # until priority queue is empty
-    while BestQueue.not_empty:
-        temp = BestQueue
-        bestq += 1
-        item   = BestQueue.get()  # item = (distance, block)
+    while AStarQueue.not_empty:
+        temp = AStarQueue
+        AStarq += 1
+        item   = AStarQueue.get()  # item = (distance, block)
         iDista = item[0]
         iBlock = item[1]
-        # print("while:", bestq, iDista)
+        # print("while:", AStarq, iDista)
 
         # if goal
         if isGoal(iBlock):
@@ -641,12 +641,12 @@ def BEST(block):
             lastPath.disPlayPosition()
             lastPath.disPlayBoard()
 
-            while not BestQueue.empty():
+            while not AStarQueue.empty():
                 try:
-                    BestQueue.get(False)
+                    AStarQueue.get(False)
                 except Empty:
                     continue
-                BestQueue.task_done()
+                AStarQueue.task_done()
             handler(iBlock)
 
             return True
@@ -657,23 +657,23 @@ def BEST(block):
             virtualStep += 4
 
             # try up
-            moveBest(BestQueue, iBlock.move_up(), "up") 
-            moveBest(BestQueue, iBlock.move_down(), "down") 
-            moveBest(BestQueue, iBlock.move_right(), "right") 
-            moveBest(BestQueue, iBlock.move_left(), "left") 
+            moveAStar(AStarQueue, iBlock.move_up(), "up") 
+            moveAStar(AStarQueue, iBlock.move_down(), "down") 
+            moveAStar(AStarQueue, iBlock.move_right(), "right") 
+            moveAStar(AStarQueue, iBlock.move_left(), "left") 
         else: 
            
             virtualStep += 8
 
-            moveBest(BestQueue, iBlock.split_move_left(), "left0")
-            moveBest(BestQueue, iBlock.split_move_right(), "right0")
-            moveBest(BestQueue, iBlock.split_move_up(), "up0")
-            moveBest(BestQueue, iBlock.split_move_down(), "down0")
+            moveAStar(AStarQueue, iBlock.split_move_left(), "left0")
+            moveAStar(AStarQueue, iBlock.split_move_right(), "right0")
+            moveAStar(AStarQueue, iBlock.split_move_up(), "up0")
+            moveAStar(AStarQueue, iBlock.split_move_down(), "down0")
             
-            moveBest(BestQueue, iBlock.split1_move_left(), "left1")
-            moveBest(BestQueue, iBlock.split1_move_right(), "right1")
-            moveBest(BestQueue, iBlock.split1_move_up(), "up1")
-            moveBest(BestQueue, iBlock.split1_move_down(), "down1")
+            moveAStar(AStarQueue, iBlock.split1_move_left(), "left1")
+            moveAStar(AStarQueue, iBlock.split1_move_right(), "right1")
+            moveAStar(AStarQueue, iBlock.split1_move_up(), "up1")
+            moveAStar(AStarQueue, iBlock.split1_move_down(), "down1")
         # time.sleep(0.6)
         # iBlock.disPlayBoard()
 
@@ -716,15 +716,15 @@ def handler(blocks):
         root.withdraw() 
         root.mainloop()
 
-        if sys.argv[1:][1] == "BEST":
+        if sys.argv[1:][1] == "AStar":
             
-            print("Solve Best")
+            print("Solve AStar")
             passState.clear()
             print('passState:', passState)
             passHandler[-1].parent = None
             passHandler[-1].gn = 0
             passHandler[-1].disPlayBoard()
-            BEST(passHandler[-1])
+            AStar(passHandler[-1])
 
         else:
             print("Wrong algorithms argument!")
@@ -743,9 +743,9 @@ block = Block(xStart, yStart, "STANDING", None, sourceMap)
 
 root = tk.Tk()
 
-if sys.argv[1:][1] == "BEST":
-    print("Solve Best")
-    BEST(block)
+if sys.argv[1:][1] == "AStar":
+    print("Solve AStar")
+    AStar(block)
 
 else:
     print("Wrong algorithms argument!")
