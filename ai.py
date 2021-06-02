@@ -543,7 +543,7 @@ def printSuccessRoad(block):
         
         temp = temp.parent
     
-    step = 0
+    step = -1
     for item in successRoad:
         step += 1
         time.sleep(0.6)
@@ -697,34 +697,37 @@ def key(event, arg):
     
     passHandler.append(arg)
     passHandler[-1].disPlayBoard()
+    
     if isFloor(arg) != True:
-        
         print("\n----------------------- GAME OVER -----------------------")
         root.destroy()
 
-def handler(blocks):
-    print( "Press arrow (up/down/right/left) to move" )
+def handler(blocks):   
+    print( "\nPress arrow (up/down/right/left) to move" )
     print( "Press Space Bar to find solution" )
     print( "Press Esc to exit" )
     passHandler.append(blocks)
     root.bind_all('<Key>', lambda event, arg=blocks: key(event,arg) )
 
-    # don't show the tk window
-    root.withdraw() 
-    root.mainloop()
+    try:
+        # don't show the tk window
+        root.withdraw() 
+        root.mainloop()
 
-    if sys.argv[1:][1] == "BEST":
-        
-        print("Solve Best")
-        passState.clear()
-        print('passState:', passState)
-        passHandler[-1].parent = None
-        passHandler[-1].gn = 0
-        passHandler[-1].disPlayBoard()
-        BEST(passHandler[-1])
+        if sys.argv[1:][1] == "BEST":
+            
+            print("Solve Best")
+            passState.clear()
+            print('passState:', passState)
+            passHandler[-1].parent = None
+            passHandler[-1].gn = 0
+            passHandler[-1].disPlayBoard()
+            BEST(passHandler[-1])
 
-    else:
-        print("Wrong algorithms argument!")
+        else:
+            print("Wrong algorithms argument!")
+    except:
+        print("\n-=-=-=-=-=- Game Selesai -=-=-=-=-=-")
 
 # START PROGRAM HERE
 passState = []
@@ -744,4 +747,3 @@ if sys.argv[1:][1] == "BEST":
 
 else:
     print("Wrong algorithms argument!")
-
