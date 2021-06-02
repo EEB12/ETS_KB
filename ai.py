@@ -543,7 +543,7 @@ def printSuccessRoad(block):
     step = 0
     for item in successRoad:
         step += 1
-        time.sleep(0.2)
+        time.sleep(0.6)
         # print("\nStep:", step, end=' >>>   ')
         item.disPlayPosition()
         # print("=============================")
@@ -567,9 +567,12 @@ def evalFunction(block):
     (xGoal, yGoal) = (0, 0)
     for yG in range(len(board)):
         for xG in range(len(board[0])):
-            if board[y][x] == '9':
+            if board[yG][xG] == 9:
                 (xGoal, yGoal) = (xG, yG)
+            # print("board:", board[yG][xG])
 
+    # print("goal:", xGoal, ",", yGoal)
+    # print("current", x, ",", y)
     # calc distance pos-goal
     distance = 0
 
@@ -594,17 +597,17 @@ def moveBest(BestQueue, block, flag):
         
         EvalCur = evalFunction(block)
         block.gn += 1
-        BestQueue.put((EvalCur, block))
+        BestQueue.put((block.gn + EvalCur, block))
         passState.append(block)
 
         return True
     return False
-            
-
+        
 def BEST(block):
     
     # create priority queue
     BestQueue = Q.PriorityQueue()
+    # print(sizepq(BestQueue))
 
     startEval = evalFunction(block)
     block.gn+=1
@@ -614,12 +617,15 @@ def BEST(block):
     
     virtualStep = 0
 
+    bestq = 1
     # until priority queue is empty
     while BestQueue.not_empty:
-
+        temp = BestQueue
+        bestq += 1
         item   = BestQueue.get()  # item = (distance, block)
         iDista = item[0]
         iBlock = item[1]
+        # print("while:", bestq, iDista)
 
         # if goal
         if isGoal(iBlock):
@@ -631,6 +637,15 @@ def BEST(block):
             lastPath.disPlayPosition()
             lastPath.disPlayBoard()
 
+            # blockh = iBlock
+            # blockh.parent = None
+            # iBlock.parent = None
+            while not BestQueue.empty():
+                try:
+                    BestQueue.get(False)
+                except Empty:
+                    continue
+                BestQueue.task_done()
             handler(iBlock)
 
             return True
@@ -658,6 +673,8 @@ def BEST(block):
             moveBest(BestQueue, iBlock.split1_move_right(), "right1")
             moveBest(BestQueue, iBlock.split1_move_up(), "up1")
             moveBest(BestQueue, iBlock.split1_move_down(), "down1")
+        # time.sleep(0.6)
+        # iBlock.disPlayBoard()
 
 def key(event, arg):
     arg = passHandler[-1]
@@ -678,17 +695,16 @@ def key(event, arg):
     
     passHandler.append(arg)
     passHandler[-1].disPlayBoard()
-    if isFloor(arg)!= True:
+    if isFloor(arg) != True:
         
-        print("\n----------------------- PECUNDANG -----------------------")
+        print("\n----------------------- GAME OVER -----------------------")
         root.destroy()
 
 def handler(blocks):
     print( "Press a key (Escape key to exit):" )
     passHandler.append(blocks)
-    i = 0
     root.bind_all('<Key>', lambda event, arg=blocks: key(event,arg) )
-    # root.bind_all('<Key>', lambda event, arg=blockh: key(event, arg) )
+
     # don't show the tk window
     root.withdraw() 
     root.mainloop()
@@ -696,12 +712,15 @@ def handler(blocks):
     if sys.argv[1:][1] == "BEST":
         
         print("Solve Best")
-        # passState.clear() 
+        passState.clear()
+        print('passState:', passState)
+        passHandler[-1].parent = None
+        passHandler[-1].gn = 0
         passHandler[-1].disPlayBoard()
         BEST(passHandler[-1])
 
-    # else:
-    #     print("Wrong algorithms argument!")
+    else:
+        print("Wrong algorithms argument!")
 
 # START PROGRAM HERE
 passState = []
