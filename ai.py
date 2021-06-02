@@ -543,7 +543,7 @@ def printSuccessRoad(block):
     step = 0
     for item in successRoad:
         step += 1
-        # time.sleep(0.2)
+        time.sleep(0.2)
         # print("\nStep:", step, end=' >>>   ')
         item.disPlayPosition()
         # print("=============================")
@@ -664,7 +664,8 @@ def key(event, arg):
     """shows key or tk code for the key"""
     # while(True):
     if event.keysym == 'Escape':
-        root.destroy()
+        # root.destroy()
+        root.quit()
     if event.keysym == 'Left':
         arg = arg.move_left()
     if event.keysym == 'Right':
@@ -673,16 +674,7 @@ def key(event, arg):
         arg = arg.move_down()
     if event.keysym == 'Up':
         arg = arg.move_up()
-    
-    # if event.char == event.keysym:
-        # normal number and lettper characters
-        # print( 'Normal Key %r' % event.char )
-    # elif len(event.char) == 1:
-        # charcters like []/.,><#$ also Return and ctrl/key
-        # print( 'Punctuation Key %r (%r)' % (event.keysym, event.char) )
-    # else:
-        # f1 to f12, shift keys, caps lock, Home, End, Delete ...
-        # print( 'Special Key %r' % event.keysym )
+  
     
     passHandler.append(arg)
     passHandler[-1].disPlayBoard()
@@ -701,9 +693,12 @@ def handler(blocks):
     root.withdraw() 
     root.mainloop()
 
-    # if sys.argv[1:][1] == "BEST":
-    #     print("Solve Best")
-    #     BEST(block)
+    if sys.argv[1:][1] == "BEST":
+        
+        print("Solve Best")
+        passState.clear()
+        passHandler[-1].disPlayBoard()
+        BEST(passHandler[-1])
 
     # else:
     #     print("Wrong algorithms argument!")
