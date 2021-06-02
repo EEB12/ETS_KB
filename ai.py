@@ -696,7 +696,7 @@ def handler(blocks):
     if sys.argv[1:][1] == "BEST":
         
         print("Solve Best")
-        passState.clear()
+        # passState.clear() 
         passHandler[-1].disPlayBoard()
         BEST(passHandler[-1])
 
