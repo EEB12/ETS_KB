@@ -659,19 +659,20 @@ def BEST(block):
             moveBest(BestQueue, iBlock.split1_move_up(), "up1")
             moveBest(BestQueue, iBlock.split1_move_down(), "down1")
 
-def key(event):
+def key(event, arg):
+    arg = passHandler[-1]
     """shows key or tk code for the key"""
     # while(True):
     if event.keysym == 'Escape':
         root.destroy()
     if event.keysym == 'Left':
-        block = block.move_left()
+        arg = arg.move_left()
     if event.keysym == 'Right':
-        block = block.move_right()
+        arg = arg.move_right()
     if event.keysym == 'Down':
-        block = block.move_down()
+        arg = arg.move_down()
     if event.keysym == 'Up':
-        block = block.move_up()
+        arg = arg.move_up()
     if event.char == event.keysym:
         # normal number and lettper characters
         print( 'Normal Key %r' % event.char )
@@ -681,25 +682,16 @@ def key(event):
     else:
         # f1 to f12, shift keys, caps lock, Home, End, Delete ...
         print( 'Special Key %r' % event.keysym )
-    block.disPlayBoard()
-    passHandler.append(block)
-    # print(passHandler[-1].disPlayBoard())
-        # time.sleep(2)
-        
-    # item.disPlayPosition()
-    # print("=============================")
-    # item.disPlayBoard()
+    
+    passHandler.append(arg)
+    passHandler[-1].disPlayBoard()
 
 def handler(blocks):
-    block = blocks
     print( "Press a key (Escape key to exit):" )
-    # passHandler.append(block)
+    passHandler.append(blocks)
     i = 0
-    # while(True):
-    # print("while ke-",i)
-    # i += 1
-    # root.bind_all('<Key>', lambda event, arg=passHandler[-1]: key(event,arg) )
-    root.bind_all('<Key>', key)
+    root.bind_all('<Key>', lambda event, arg=blocks: key(event,arg) )
+    # root.bind_all('<Key>', lambda event, arg=blockh: key(event, arg) )
     # don't show the tk window
     root.withdraw() 
     root.mainloop()
@@ -718,14 +710,8 @@ passHandler = []
 MAP_ROW, MAP_COL, xStart, yStart, sourceMap, ManaBoa \
                         = readMap('map/map'+sys.argv[1:][0]+'.txt')
 
+global block
 block = Block(xStart, yStart, "STANDING", None, sourceMap)
-
-# root = tk.Tk()
-# print( "Press a key (Escape key to exit):" )
-# root.bind_all('<Key>', key)
-# # don't show the tk window
-# root.withdraw()
-# root.mainloop()
 
 root = tk.Tk()
 

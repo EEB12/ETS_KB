@@ -1,28 +1,20 @@
-# KeyLogger_tk2.py
-# show a character key when pressed without using Enter key
-# hide the Tkinter GUI window, only console shows
+from tkinter import *
 
-import tkinter as tk
+root = Tk()
 
-a = 1
+text = ''
+def key(event):
+    global text
+    text+= event.char
+    print("pressed", text)
 
-def key(event, arg):
-    """shows key or tk code for the key"""
-    if event.keysym == 'Escape':
-        root.destroy()
-    if event.char == event.keysym:
-        # normal number and letter characterxads
-        print( arg, 'Normal Key %r' % event.char )
-    elif len(event.char) == 1:
-        # charcters like []/.,><#$ also Return and ctrl/key
-        print( arg, 'Punctuation Key %r (%r)' % (event.keysym, event.char) )
-    else:
-        # f1 to f12, shift keys, caps lock, Home, End, Delete ...
-        print( arg, 'Special Key %r' % event.keysym )
+def callback(event):
+    frame.focus_set()
+    print ("clicked at", event.x, event.y)
 
-root = tk.Tk()
-print( "Press a key (Escape key to exit):" )
-root.bind_all('<Key>', lambda event, arg=2: key(event, arg))
-# don't show the tk window
-root.withdraw()
+frame = Frame(root, width=100, height=100)
+frame.bind("<Key>", key)
+frame.bind("<Button-1>", callback)
+frame.pack()
+
 root.mainloop()
