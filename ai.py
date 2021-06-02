@@ -41,7 +41,10 @@ class Block:
         self.board  = copy.deepcopy(board)
         self.x1     = x1
         self.y1     = y1
-        self.gn     = gn
+        if(parent != None):
+            self.gn     = parent.gn + 1
+        else:
+            self.gn = gn
     
     def __lt__(self, block):
         return True
@@ -112,7 +115,7 @@ class Block:
 
     # FOR CASE SPLIT
     def split_move_up(self):
-        newBlock = Block(self.x, self.y, self.rot, self, self.board, self.x1, self.y1,self.gn)
+        newBlock = Block(self.x, self.y, self.rot, self, self.board, self.x1, self.y1,self.gn + 1)
         newBlock.y -= 1
         return newBlock 
 
@@ -540,7 +543,7 @@ def printSuccessRoad(block):
         
         temp = temp.parent
     
-    step = 0
+    step = -1
     for item in successRoad:
         step += 1
         time.sleep(0.6)
@@ -597,6 +600,7 @@ def moveBest(BestQueue, block, flag):
         
         EvalCur = evalFunction(block)
         block.gn += 1
+        print("block.gn + EvalCur:", block.gn + EvalCur, block.gn, EvalCur)
         BestQueue.put((block.gn + EvalCur, block))
         passState.append(block)
 
@@ -610,14 +614,14 @@ def BEST(block):
     # print(sizepq(BestQueue))
 
     startEval = evalFunction(block)
-    block.gn+=1
+    # block.gn+=1
     # insert start node
     BestQueue.put((startEval, block))
     passState.append(block)
     
     virtualStep = 0
 
-    bestq = 1
+    bestq = 0
     # until priority queue is empty
     while BestQueue.not_empty:
         temp = BestQueue
@@ -625,7 +629,7 @@ def BEST(block):
         item   = BestQueue.get()  # item = (distance, block)
         iDista = item[0]
         iBlock = item[1]
-        # print("while:", bestq, iDista)
+        print("while:", bestq, iDista)
 
         # if goal
         if isGoal(iBlock):
@@ -637,9 +641,6 @@ def BEST(block):
             lastPath.disPlayPosition()
             lastPath.disPlayBoard()
 
-            # blockh = iBlock
-            # blockh.parent = None
-            # iBlock.parent = None
             while not BestQueue.empty():
                 try:
                     BestQueue.get(False)
@@ -680,9 +681,10 @@ def key(event, arg):
     arg = passHandler[-1]
     """shows key or tk code for the key"""
     # while(True):
-    if event.keysym == 'Escape':
-        # root.destroy()
+    if event.keysym == 'space':
         root.quit()
+    if event.keysym == 'Escape':
+        root.destroy()
     if event.keysym == 'Left':
         arg = arg.move_left()
     if event.keysym == 'Right':
@@ -695,32 +697,37 @@ def key(event, arg):
     
     passHandler.append(arg)
     passHandler[-1].disPlayBoard()
+    
     if isFloor(arg) != True:
-        
         print("\n----------------------- GAME OVER -----------------------")
         root.destroy()
 
-def handler(blocks):
-    print( "Press a key (Escape key to exit):" )
+def handler(blocks):   
+    print( "\nPress arrow (up/down/right/left) to move" )
+    print( "Press Space Bar to find solution" )
+    print( "Press Esc to exit" )
     passHandler.append(blocks)
     root.bind_all('<Key>', lambda event, arg=blocks: key(event,arg) )
 
-    # don't show the tk window
-    root.withdraw() 
-    root.mainloop()
+    try:
+        # don't show the tk window
+        root.withdraw() 
+        root.mainloop()
 
-    if sys.argv[1:][1] == "BEST":
-        
-        print("Solve Best")
-        passState.clear()
-        print('passState:', passState)
-        passHandler[-1].parent = None
-        passHandler[-1].gn = 0
-        passHandler[-1].disPlayBoard()
-        BEST(passHandler[-1])
+        if sys.argv[1:][1] == "BEST":
+            
+            print("Solve Best")
+            passState.clear()
+            print('passState:', passState)
+            passHandler[-1].parent = None
+            passHandler[-1].gn = 0
+            passHandler[-1].disPlayBoard()
+            BEST(passHandler[-1])
 
-    else:
-        print("Wrong algorithms argument!")
+        else:
+            print("Wrong algorithms argument!")
+    except:
+        print("\n-=-=-=-=-=- Game Selesai -=-=-=-=-=-")
 
 # START PROGRAM HERE
 passState = []
@@ -740,4 +747,3 @@ if sys.argv[1:][1] == "BEST":
 
 else:
     print("Wrong algorithms argument!")
-
