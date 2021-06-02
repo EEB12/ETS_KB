@@ -673,15 +673,18 @@ def key(event, arg):
         arg = arg.move_down()
     if event.keysym == 'Up':
         arg = arg.move_up()
-    if event.char == event.keysym:
+    if isFloor(arg)!= True:
+        print("cundang")
+        root.destroy()
+    # if event.char == event.keysym:
         # normal number and lettper characters
-        print( 'Normal Key %r' % event.char )
-    elif len(event.char) == 1:
+        # print( 'Normal Key %r' % event.char )
+    # elif len(event.char) == 1:
         # charcters like []/.,><#$ also Return and ctrl/key
-        print( 'Punctuation Key %r (%r)' % (event.keysym, event.char) )
-    else:
+        # print( 'Punctuation Key %r (%r)' % (event.keysym, event.char) )
+    # else:
         # f1 to f12, shift keys, caps lock, Home, End, Delete ...
-        print( 'Special Key %r' % event.keysym )
+        # print( 'Special Key %r' % event.keysym )
     
     passHandler.append(arg)
     passHandler[-1].disPlayBoard()
