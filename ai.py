@@ -600,7 +600,7 @@ def moveBest(BestQueue, block, flag):
         
         EvalCur = evalFunction(block)
         block.gn += 1
-        print("block.gn + EvalCur:", block.gn + EvalCur, block.gn, EvalCur)
+        # print("block.gn + EvalCur:", block.gn + EvalCur, block.gn, EvalCur)
         BestQueue.put((block.gn + EvalCur, block))
         passState.append(block)
 
@@ -629,7 +629,7 @@ def BEST(block):
         item   = BestQueue.get()  # item = (distance, block)
         iDista = item[0]
         iBlock = item[1]
-        print("while:", bestq, iDista)
+        # print("while:", bestq, iDista)
 
         # if goal
         if isGoal(iBlock):
@@ -700,7 +700,9 @@ def key(event, arg):
     
     if isFloor(arg) != True:
         print("\n----------------------- GAME OVER -----------------------")
+        sys.exit()
         root.destroy()
+        
 
 def handler(blocks):   
     print( "\nPress arrow (up/down/right/left) to move" )
