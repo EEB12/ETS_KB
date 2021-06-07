@@ -3,4 +3,7 @@
 ### Taqarra Rayhan 05111940000121
 
 untuk running program ketik 
-`python3 ai.py `
+`python3 ai.py Astar nomerlevel`
+
+contoh :
+`python3 ai.py Astar 03`
